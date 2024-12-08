@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model organization {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String
+  logo          String?
+  daocontract   String
+  walletAddress String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  proposals     proposal[]  // One-to-many relationship
+}
+
+model proposal {
+  proposalId              String       @id @default(uuid())
+  organizationId          Int          // Foreign key field
+  organization            organization @relation(fields: [organizationId], references: [id])
+  projectDescription      String
+  proposalDescription     String
+  contractAddress         String
+}
+
